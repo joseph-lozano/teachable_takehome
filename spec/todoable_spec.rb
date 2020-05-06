@@ -4,6 +4,6 @@ RSpec.describe Todoable do
   end
 
   it "does something useful" do
-    expect(false).to eq(true)
+    expect(Todoable.hello).to eq("Hello World")
   end
 end
