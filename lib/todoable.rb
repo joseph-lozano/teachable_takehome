@@ -28,5 +28,10 @@ module Todoable
       config.username = username
       config.password = password
     end
+    Todoable::Authentication.fetch_token()
+  end
+
+  def self.index()
+    Todoable::API.index()
   end
 end
