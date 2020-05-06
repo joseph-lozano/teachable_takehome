@@ -5,9 +5,11 @@ class Todoable::Authentication
   AUTH_URI = URI("https://todoable.teachable.tech/api/authenticate")
   attr_reader :token
 
-  def initialize(username, password)
+  def initialize()
     headers = { "Content-Type" => "application/json", "Accept" => "application/json" }
     post_req = Net::HTTP::Post.new(AUTH_URI)
+    username = Todoable.configuration.username
+    password = Todoable.configuration.password
     post_req.basic_auth(username, password)
     resp = Net::HTTP.start(AUTH_URI) do |http|
       http.request(post_req)
