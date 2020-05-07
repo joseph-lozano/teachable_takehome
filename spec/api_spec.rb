@@ -16,8 +16,18 @@ RSpec.describe Todoable::API do
       },
     ).
       to_return(status: 200, body: { token: @valid_token }.to_json, headers: {})
+  end
 
-    stub_request(:get, "https://todoable.teachable.tech/api/lists").
+  before(:each) do
+    Todoable.init(@username, @password)
+  end
+
+  after do
+    Todoable.reset_configuration()
+  end
+
+  it "gets the index page" do
+    stub = stub_request(:get, "https://todoable.teachable.tech/api/lists").
       with(
       headers: @authorization_headers,
     ).
@@ -34,17 +44,6 @@ RSpec.describe Todoable::API do
                     },
                   ],
                 }.to_json, headers: {})
-  end
-
-  before(:each) do
-    Todoable.init(@username, @password)
-  end
-
-  after do
-    Todoable.reset_configuration()
-  end
-
-  it "gets the index page" do
     expect(Todoable::API.index()).to eq(
       {
         "lists" => [
@@ -60,6 +59,7 @@ RSpec.describe Todoable::API do
         ],
       }
     )
+    expect(stub).to have_been_requested.once
   end
   it "gets the show response" do
     list_id = 12343
@@ -110,7 +110,7 @@ RSpec.describe Todoable::API do
     )
   end
 
-  it "creats a list" do
+  it "creates a list" do
     name = "A LIST NAME"
     data = { "list" => { "name" => name } }.to_json
     stub = stub_request(:post, "https://todoable.teachable.tech/api/lists").
@@ -120,6 +120,20 @@ RSpec.describe Todoable::API do
     ).
       to_return(status: 201, body: "", headers: {})
     Todoable::API.create_list(name)
+    expect(stub).to have_been_requested.once
+  end
+
+  it "updates a list name" do
+    name = "A LIST NAME"
+    list_id = 12323
+    data = { "list" => { "name" => name } }.to_json
+    stub = stub_request(:patch, "https://todoable.teachable.tech/api/lists/#{list_id}").
+      with(
+      body: data,
+      headers: @authorization_headers,
+    ).
+      to_return(status: 201, body: "", headers: {})
+    Todoable::API.update_list_name(list_id, name)
     expect(stub).to have_been_requested.once
   end
 

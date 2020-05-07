@@ -42,6 +42,23 @@ class Todoable::API
     true
   end
 
+  def self.update_list_name(list_id, list_name)
+    token = Todoable::Authentication.token()
+    uri = URI(BASE_PATH + "lists/#{list_id}")
+    data = {
+      "list": {
+        "name": list_name,
+      },
+    }
+    request = Net::HTTP::Patch.new(uri.path)
+    request["Authorization"] = "Token token=\"#{token}\""
+    request.body = data.to_json
+    res = Net::HTTP.start(uri.host, use_ssl: true) do |http|
+      http.request(request)
+    end
+    true
+  end
+
   def self.delete_list(list_id)
     token = Todoable::Authentication.token()
     uri = URI(BASE_PATH + "lists/#{list_id}")

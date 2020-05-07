@@ -40,6 +40,10 @@ module Todoable
     Todoable::API.show_list(id)
   end
 
+  def self.update_list(id, name: new_name)
+    Todoable::API.update_list_name(id, new_name)
+  end
+
   def self.delete_list(id)
     Todoable::API.delete_list(id)
   end
