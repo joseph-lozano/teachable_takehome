@@ -20,10 +20,6 @@ module Todoable
     @configuration = Configuration.new
   end
 
-  def self.hello
-    "Hello World"
-  end
-
   def self.init(username, password)
     Todoable.configure do |config|
       config.username = username
@@ -32,7 +28,15 @@ module Todoable
     Todoable::Authentication.fetch_token()
   end
 
-  def self.index()
+  def self.list_lists()
     Todoable::API.index()
+  end
+
+  def self.create_list(name)
+    Todoable::API.create(name)
+  end
+
+  def self.get_list(id)
+    Todoable::API.show(id)
   end
 end
