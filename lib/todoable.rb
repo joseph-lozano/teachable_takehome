@@ -39,4 +39,8 @@ module Todoable
   def self.get_list(id)
     Todoable::API.show_list(id)
   end
+
+  def self.delete_list(id)
+    Todoable::API.delete_list(id)
+  end
 end

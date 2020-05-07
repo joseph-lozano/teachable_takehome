@@ -41,4 +41,15 @@ class Todoable::API
     end
     true
   end
+
+  def self.delete_list(list_id)
+    token = Todoable::Authentication.token()
+    uri = URI(BASE_PATH + "lists/#{list_id}")
+    request = Net::HTTP::Delete.new(uri.path)
+    request["Authorization"] = "Token token=\"#{token}\""
+    res = Net::HTTP.start(uri.host, use_ssl: true) do |http|
+      http.request(request)
+    end
+    true
+  end
 end

@@ -123,6 +123,14 @@ RSpec.describe Todoable::API do
     expect(stub).to have_been_requested.once
   end
 
-  it "creates an item" do
+  it "deletes a list" do
+    list_id = 1223
+    stub = stub_request(:delete, "https://todoable.teachable.tech/api/lists/#{list_id}").
+      with(
+      headers: @authorization_headers,
+    ).
+      to_return(status: 204, body: "", headers: {})
+    Todoable::API.delete_list(list_id)
+    expect(stub).to have_been_requested.once
   end
 end
