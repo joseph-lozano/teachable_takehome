@@ -147,4 +147,17 @@ RSpec.describe Todoable::API do
     Todoable::API.delete_list(list_id)
     expect(stub).to have_been_requested.once
   end
+  it "creates an item" do
+    name = "A item NAME"
+    list_id = 36352
+    data = { "item" => { "name" => name } }.to_json
+    stub = stub_request(:post, "https://todoable.teachable.tech/api/lists/#{list_id}/items").
+      with(
+      body: data,
+      headers: @authorization_headers,
+    ).
+      to_return(status: 201, body: "", headers: {})
+    Todoable::API.create_item(list_id, name)
+    expect(stub).to have_been_requested.once
+  end
 end

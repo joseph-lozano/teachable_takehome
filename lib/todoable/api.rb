@@ -26,7 +26,6 @@ class Todoable::API
   end
 
   def self.update_list_name(list_id, list_name)
-    token = Todoable::Authentication.token()
     uri = URI(BASE_PATH + "lists/#{list_id}")
     data = {
       "list": {
@@ -39,6 +38,17 @@ class Todoable::API
   def self.delete_list(list_id)
     uri = URI(BASE_PATH + "lists/#{list_id}")
     delete(uri)
+  end
+
+  def self.create_item(list_id, item_name)
+    uri = URI(BASE_PATH + "lists/#{list_id}/items")
+    data = {
+      "item": {
+        "name": item_name,
+      },
+    }
+    post(uri, data)
+    true
   end
 
   private

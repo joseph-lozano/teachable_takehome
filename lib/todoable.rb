@@ -47,4 +47,8 @@ module Todoable
   def self.delete_list(id)
     Todoable::API.delete_list(id)
   end
+
+  def self.create_item(list_id, item_name)
+    Todoable::API.create_item(list_id, item_name)
+  end
 end
