@@ -11,7 +11,7 @@ class Todoable::Authentication
     username = Todoable.configuration.username
     password = Todoable.configuration.password
     post_req.basic_auth(username, password)
-    resp = Net::HTTP.start(AUTH_URI) do |http|
+    resp = Net::HTTP.start(AUTH_URI.host, use_ssl: true) do |http|
       http.request(post_req)
     end
     raise AuthenticationError unless resp.code == "200"

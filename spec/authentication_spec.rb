@@ -7,7 +7,7 @@ RSpec.describe Todoable::Authentication do
     valid_token = "valid_token"
     username = "valid_user"
     password = "valid_pass"
-    stub_request(:post, "http://https//todoable.teachable.tech/api/authenticate:80/api/authenticate").
+    stub_request(:post, "https://todoable.teachable.tech/api/authenticate").
       with(
       basic_auth: [username, password],
       headers: {
@@ -24,7 +24,7 @@ RSpec.describe Todoable::Authentication do
   it "returs a 401 with invalid credetials" do
     username = "valid_user"
     password = "invalid_pass"
-    stub_request(:post, "http://https//todoable.teachable.tech/api/authenticate:80/api/authenticate").
+    stub_request(:post, "https://todoable.teachable.tech/api/authenticate").
       with(
       basic_auth: [username, password],
       headers: {

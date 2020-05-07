@@ -1,4 +1,5 @@
 require "todoable/version"
+require "todoable/api"
 require "todoable/authentication"
 require "todoable/configuration"
 

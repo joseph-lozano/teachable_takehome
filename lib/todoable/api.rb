@@ -1,0 +1,17 @@
+require "net/http"
+
+class Todoable::API
+  BASE_PATH = "https://todoable.teachable.tech/api/"
+  INDEX_PATH = "lists"
+  def self.index
+    token = Todoable::Authentication.token()
+    uri = URI(BASE_PATH + INDEX_PATH)
+    pp uri
+    request = Net::HTTP::Get.new(uri.path)
+    request["Authorization"] = "Token token=\"#{token}\""
+    res = Net::HTTP.start(uri.host, use_ssl: true) do |http|
+      http.request(request)
+    end
+    JSON.parse(res.body)
+  end
+end
