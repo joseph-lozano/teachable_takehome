@@ -55,4 +55,8 @@ module Todoable
   def self.finish_item(list_id, item_id)
     Todoable::API.finish_item(list_id, item_id)
   end
+
+  def self.delete_item(list_id, item_id)
+    Todoable::API.delete_item(list_id, item_id)
+  end
 end

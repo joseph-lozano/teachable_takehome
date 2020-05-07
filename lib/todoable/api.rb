@@ -56,6 +56,11 @@ class Todoable::API
     put(uri)
   end
 
+  def self.delete_item(list_id, item_id)
+    uri = URI(BASE_PATH + "lists/#{list_id}/items/#{item_id}")
+    delete(uri)
+  end
+
   private
 
   def self.get(uri)
