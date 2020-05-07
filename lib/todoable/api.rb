@@ -4,25 +4,14 @@ class Todoable::API
   BASE_PATH = "https://todoable.teachable.tech/api/"
   INDEX_PATH = "lists"
   def self.index
-    token = Todoable::Authentication.token()
     uri = URI(BASE_PATH + INDEX_PATH)
-    request = Net::HTTP::Get.new(uri.path)
-    request["Authorization"] = "Token token=\"#{token}\""
-    res = Net::HTTP.start(uri.host, use_ssl: true) do |http|
-      http.request(request)
-    end
-    JSON.parse(res.body)
+    get(uri)
   end
 
   def self.show_list(list_id)
     token = Todoable::Authentication.token()
     uri = URI(BASE_PATH + "lists/#{list_id}")
-    request = Net::HTTP::Get.new(uri.path)
-    request["Authorization"] = "Token token=\"#{token}\""
-    res = Net::HTTP.start(uri.host, use_ssl: true) do |http|
-      http.request(request)
-    end
-    JSON.parse(res.body)
+    get(uri)
   end
 
   def self.create_list(list_name)
@@ -33,13 +22,7 @@ class Todoable::API
         "name": list_name,
       },
     }
-    request = Net::HTTP::Post.new(uri.path)
-    request["Authorization"] = "Token token=\"#{token}\""
-    request.body = data.to_json
-    res = Net::HTTP.start(uri.host, use_ssl: true) do |http|
-      http.request(request)
-    end
-    true
+    post(uri, data)
   end
 
   def self.update_list_name(list_id, list_name)
@@ -50,23 +33,47 @@ class Todoable::API
         "name": list_name,
       },
     }
-    request = Net::HTTP::Patch.new(uri.path)
-    request["Authorization"] = "Token token=\"#{token}\""
-    request.body = data.to_json
-    res = Net::HTTP.start(uri.host, use_ssl: true) do |http|
-      http.request(request)
-    end
-    true
+    patch(uri, data)
   end
 
   def self.delete_list(list_id)
-    token = Todoable::Authentication.token()
     uri = URI(BASE_PATH + "lists/#{list_id}")
+    delete(uri)
+  end
+
+  private
+
+  def self.get(uri)
+    request = Net::HTTP::Get.new(uri.path)
+    res = make_request(uri, request)
+    JSON.parse(res.body)
+  end
+
+  def self.post(uri, data = nil)
+    request = Net::HTTP::Post.new(uri.path)
+    request.body = data.to_json unless data.nil?
+    make_request(uri, request)
+    true
+  end
+
+  def self.patch(uri, data = nil)
+    request = Net::HTTP::Patch.new(uri.path)
+    request.body = data.to_json unless data.nil?
+    make_request(uri, request)
+    true
+  end
+
+  def self.delete(uri)
     request = Net::HTTP::Delete.new(uri.path)
+    res = make_request(uri, request)
+    true
+  end
+
+  def self.make_request(uri, request)
+    token = Todoable::Authentication.token()
     request["Authorization"] = "Token token=\"#{token}\""
     res = Net::HTTP.start(uri.host, use_ssl: true) do |http|
       http.request(request)
     end
-    true
   end
 end
