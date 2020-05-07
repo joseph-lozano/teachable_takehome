@@ -51,6 +51,11 @@ class Todoable::API
     true
   end
 
+  def self.finish_item(list_id, item_id)
+    uri = URI(BASE_PATH + "lists/#{list_id}/items/#{item_id}/finish")
+    put(uri)
+  end
+
   private
 
   def self.get(uri)
@@ -68,6 +73,13 @@ class Todoable::API
 
   def self.patch(uri, data = nil)
     request = Net::HTTP::Patch.new(uri.path)
+    request.body = data.to_json unless data.nil?
+    make_request(uri, request)
+    true
+  end
+
+  def self.put(uri, data = nil)
+    request = Net::HTTP::Put.new(uri.path)
     request.body = data.to_json unless data.nil?
     make_request(uri, request)
     true

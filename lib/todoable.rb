@@ -51,4 +51,8 @@ module Todoable
   def self.create_item(list_id, item_name)
     Todoable::API.create_item(list_id, item_name)
   end
+
+  def self.finish_item(list_id, item_id)
+    Todoable::API.finish_item(list_id, item_id)
+  end
 end
