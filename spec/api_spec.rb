@@ -2,6 +2,10 @@ require "json"
 RSpec.describe Todoable::API do
   before(:each) do
     @valid_token = "valid_token"
+    @authorization_headers = {
+      "Accept" => "*/*",
+      "Authorization" => "Token token=\"#{@valid_token}\"",
+    }
     @username = "valid_user"
     @password = "valid_pass"
     stub_request(:post, "https://todoable.teachable.tech/api/authenticate").
@@ -15,10 +19,7 @@ RSpec.describe Todoable::API do
 
     stub_request(:get, "https://todoable.teachable.tech/api/lists").
       with(
-      headers: {
-        "Accept" => "*/*",
-        "Authorization" => "Token token=\"#{@valid_token}\"",
-      },
+      headers: @authorization_headers,
     ).
       to_return(status: 200, body: {
                   "lists" => [
@@ -107,5 +108,18 @@ RSpec.describe Todoable::API do
         },
       }
     )
+  end
+
+  it "does a post" do
+    name = "A LIST NAME"
+    data = { "list" => { "name" => name } }.to_json
+    stub = stub_request(:post, "https://todoable.teachable.tech/api/lists").
+      with(
+      body: data,
+      headers: @authorization_headers,
+    ).
+      to_return(status: 201, body: "", headers: {})
+    Todoable::API.create(name)
+    expect(stub).to have_been_requested.once
   end
 end

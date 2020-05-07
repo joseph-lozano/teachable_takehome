@@ -24,4 +24,21 @@ class Todoable::API
     end
     JSON.parse(res.body)
   end
+
+  def self.create(list_name)
+    token = Todoable::Authentication.token()
+    uri = URI(BASE_PATH + "lists")
+    data = {
+      "list": {
+        "name": list_name,
+      },
+    }
+    request = Net::HTTP::Post.new(uri.path)
+    request["Authorization"] = "Token token=\"#{token}\""
+    request.body = data.to_json
+    res = Net::HTTP.start(uri.host, use_ssl: true) do |http|
+      http.request(request)
+    end
+    true
+  end
 end
