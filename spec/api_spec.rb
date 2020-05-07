@@ -88,7 +88,7 @@ RSpec.describe Todoable::API do
                     ],
                   },
                 }.to_json)
-    expect(Todoable::API.show(list_id)).to eq(
+    expect(Todoable::API.show_list(list_id)).to eq(
       {
         "list" => {
           "name" => "Urgent Things",
@@ -110,7 +110,7 @@ RSpec.describe Todoable::API do
     )
   end
 
-  it "does a post" do
+  it "creats a list" do
     name = "A LIST NAME"
     data = { "list" => { "name" => name } }.to_json
     stub = stub_request(:post, "https://todoable.teachable.tech/api/lists").
@@ -119,7 +119,10 @@ RSpec.describe Todoable::API do
       headers: @authorization_headers,
     ).
       to_return(status: 201, body: "", headers: {})
-    Todoable::API.create(name)
+    Todoable::API.create_list(name)
     expect(stub).to have_been_requested.once
+  end
+
+  it "creates an item" do
   end
 end

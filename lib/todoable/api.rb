@@ -14,7 +14,7 @@ class Todoable::API
     JSON.parse(res.body)
   end
 
-  def self.show(list_id)
+  def self.show_list(list_id)
     token = Todoable::Authentication.token()
     uri = URI(BASE_PATH + "lists/#{list_id}")
     request = Net::HTTP::Get.new(uri.path)
@@ -25,7 +25,7 @@ class Todoable::API
     JSON.parse(res.body)
   end
 
-  def self.create(list_name)
+  def self.create_list(list_name)
     token = Todoable::Authentication.token()
     uri = URI(BASE_PATH + "lists")
     data = {

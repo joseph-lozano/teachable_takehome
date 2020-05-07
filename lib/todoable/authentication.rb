@@ -1,5 +1,6 @@
 require "net/http"
 require "uri"
+require "json"
 
 class Todoable::Authentication
   AUTH_URI = URI("https://todoable.teachable.tech/api/authenticate")

@@ -33,10 +33,10 @@ module Todoable
   end
 
   def self.create_list(name)
-    Todoable::API.create(name)
+    Todoable::API.create_list(name)
   end
 
   def self.get_list(id)
-    Todoable::API.show(id)
+    Todoable::API.show_list(id)
   end
 end
