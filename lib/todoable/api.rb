@@ -6,7 +6,17 @@ class Todoable::API
   def self.index
     token = Todoable::Authentication.token()
     uri = URI(BASE_PATH + INDEX_PATH)
-    pp uri
+    request = Net::HTTP::Get.new(uri.path)
+    request["Authorization"] = "Token token=\"#{token}\""
+    res = Net::HTTP.start(uri.host, use_ssl: true) do |http|
+      http.request(request)
+    end
+    JSON.parse(res.body)
+  end
+
+  def self.show(list_id)
+    token = Todoable::Authentication.token()
+    uri = URI(BASE_PATH + "lists/#{list_id}")
     request = Net::HTTP::Get.new(uri.path)
     request["Authorization"] = "Token token=\"#{token}\""
     res = Net::HTTP.start(uri.host, use_ssl: true) do |http|

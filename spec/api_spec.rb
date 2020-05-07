@@ -1,7 +1,7 @@
 require "json"
 RSpec.describe Todoable::API do
-  before(:all) do
-    valid_token = "valid_token"
+  before(:each) do
+    @valid_token = "valid_token"
     @username = "valid_user"
     @password = "valid_pass"
     stub_request(:post, "https://todoable.teachable.tech/api/authenticate").
@@ -11,13 +11,13 @@ RSpec.describe Todoable::API do
         "Accept" => "*/*",
       },
     ).
-      to_return(status: 200, body: { token: valid_token }.to_json, headers: {})
+      to_return(status: 200, body: { token: @valid_token }.to_json, headers: {})
 
     stub_request(:get, "https://todoable.teachable.tech/api/lists").
       with(
       headers: {
         "Accept" => "*/*",
-        "Authorization" => "Token token=\"#{valid_token}\"",
+        "Authorization" => "Token token=\"#{@valid_token}\"",
       },
     ).
       to_return(status: 200, body: {
@@ -57,6 +57,54 @@ RSpec.describe Todoable::API do
             "id" => "2",
           },
         ],
+      }
+    )
+  end
+  it "gets the show response" do
+    list_id = 12343
+    stub_request(:get, "https://todoable.teachable.tech/api/lists/#{list_id}").
+      with(
+      headers: {
+        "Accept" => "*/*",
+        "Authorization" => "Token token=\"#{@valid_token}\"",
+      },
+    ).
+      to_return(status: 200, body: {
+                  "list" => {
+                    "name" => "Urgent Things",
+                    "items" => [
+                      {
+                        "name" => "Feed the cat",
+                        "finished_at" => nil,
+                        "src" => "https://todoable.teachable.tech/api/lists/#{list_id}/items/1",
+                        "id" => "1",
+                      }, {
+                        "name" => "Get cat food",
+                        "finished_at" => nil,
+                        "src" => "https://todoable.teachable.tech/api/lists/#{list_id}/items/1",
+                        "id" => "2",
+                      },
+                    ],
+                  },
+                }.to_json)
+    expect(Todoable::API.show(list_id)).to eq(
+      {
+        "list" => {
+          "name" => "Urgent Things",
+          "items" => [
+            {
+              "name" => "Feed the cat",
+              "finished_at" => nil,
+              "src" => "https://todoable.teachable.tech/api/lists/#{list_id}/items/1",
+              "id" => "1",
+            }, {
+              "name" => "Get cat food",
+              "finished_at" => nil,
+              "src" => "https://todoable.teachable.tech/api/lists/#{list_id}/items/1",
+              "id" => "2",
+            },
+          ],
+        },
       }
     )
   end
